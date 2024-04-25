@@ -1,8 +1,18 @@
 library weekly_date_picker;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:week_of_year/week_of_year.dart';
 import "package:weekly_date_picker/datetime_apis.dart";
+
+class PickerScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
+}
 
 class WeeklyDatePicker extends StatefulWidget {
   WeeklyDatePicker({
@@ -114,20 +124,23 @@ class _WeeklyDatePickerState extends State<WeeklyDatePicker> {
                 )
               : Container(),
           Expanded(
-            child: PageView.builder(
-              controller: _controller,
-              onPageChanged: (int index) {
-                setState(() {
-                  _weeknumberInSwipe = _initialSelectedDay
-                      .addDays(7 * (index - _weekIndexOffset))
-                      .weekOfYear;
-                });
-              },
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (_, weekIndex) => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: _weekdays(weekIndex - _weekIndexOffset),
+            child: ScrollConfiguration(
+              behavior: PickerScrollBehavior(),
+              child: PageView.builder(
+                controller: _controller,
+                onPageChanged: (int index) {
+                  setState(() {
+                    _weeknumberInSwipe = _initialSelectedDay
+                        .addDays(7 * (index - _weekIndexOffset))
+                        .weekOfYear;
+                  });
+                },
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (_, weekIndex) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: _weekdays(weekIndex - _weekIndexOffset),
+                ),
               ),
             ),
           ),
