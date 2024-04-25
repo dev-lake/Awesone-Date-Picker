@@ -49,3 +49,24 @@ You can use custom colors and labels by the optional parameters:
 - `weeknumberColor` Color of the weekday container
 - `weeknumberTextColor` Color of the weekday text
 - `daysInWeek` Specifies the number of weekdays to render, default is 7, so Monday to Sunday
+
+## How to make it scrollable on desktop
+
+1- Create a class, extend it from MaterialScrollBeavior, and override dragDevices:
+```dart
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+      };
+}
+```
+2- Pass an AppScrollBehavior instance to scrollBehavior property of MaterialApp:
+```dart
+MaterialApp(
+scrollBehavior: AppScrollBehavior(),
+...
+);
+```
